@@ -1,0 +1,64 @@
+@model WebApp.Models.Product
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Bạn có chắc chắn muốn xóa sản phẩm này?</h3>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Hình ảnh
+        </dt>
+        <dd class="col-sm-10">
+            <div class="row">
+                @foreach (var image in Model.ProductImages)
+                {
+                    <div class="col-md-4 mb-2">
+                        <div class="card">
+                            <img src="@image.FilePath" alt="@Model.Name" class="card-img-top" style="max-height: 200px; object-fit: cover;">
+                            @if (image.IsMain)
+                            {
+                                <div class="card-body">
+                                    <span class="badge bg-primary">Ảnh chính</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div> 

@@ -1,0 +1,73 @@
+@model IEnumerable<WebApp.Models.Category>
+
+@{
+    ViewData["Title"] = "Danh sách danh mục";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-tags"></i> @ViewData["Title"]</h1>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Thêm danh mục mới
+        </a>
+    }
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" style="width: 50px;">#</th>
+                    <th scope="col">Tên danh mục</th>
+                    <th scope="col" class="text-center" style="width: 150px;">Số sản phẩm</th>
+                    <th scope="col" class="text-end" style="width: 200px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle">@item.Id</td>
+                        <td class="align-middle">@item.Name</td>
+                        <td class="align-middle text-center">
+                            <span class="badge bg-secondary">@item.Products.Count</span>
+                        </td>
+                        <td class="align-middle">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-info-circle"></i> Chi tiết
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="bi bi-folder display-1 text-muted"></i>
+        <h3 class="mt-3">Chưa có danh mục nào</h3>
+        @if (User.IsInRole("Admin"))
+        {
+            <p>Hãy thêm danh mục mới để bắt đầu.</p>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Thêm danh mục mới
+            </a>
+        }
+    </div>
+} 

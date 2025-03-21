@@ -1,0 +1,102 @@
+@model WebApp.Models.Product
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            @if (Model.ProductImages.Any())
+            {
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var image in Model.ProductImages)
+                        {
+                            <div class="carousel-item @(image.IsMain ? "active" : "")">
+                                <img src="@image.FilePath" class="d-block w-100" alt="@Model.Name" style="height: 400px; object-fit: cover;">
+                            </div>
+                        }
+                    </div>
+                    @if (Model.ProductImages.Count > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    }
+                </div>
+
+                <div class="row mt-3">
+                    @foreach (var image in Model.ProductImages)
+                    {
+                        <div class="col-3 mb-3">
+                            <img src="@image.FilePath" class="img-thumbnail @(image.IsMain ? "border-primary" : "")" 
+                                 alt="@Model.Name" style="height: 80px; object-fit: cover; cursor: pointer;"
+                                 onclick="selectImage(this, @Model.ProductImages.ToList().IndexOf(image))">
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                    <span class="text-muted">Không có ảnh</span>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                <dd class="col-sm-8">@Model.Name</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Description)</dt>
+                <dd class="col-sm-8">@Model.Description</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Price)</dt>
+                <dd class="col-sm-8">@Model.Price.ToString("N0") đ</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Category)</dt>
+                <dd class="col-sm-8">
+                    <a asp-controller="Category" asp-action="Details" asp-route-id="@Model.CategoryId">
+                        @Model.Category.Name
+                    </a>
+                </dd>
+            </dl>
+
+            <div class="mt-3">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Xóa</a>
+                }
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function selectImage(img, index) {
+            // Remove border from all thumbnails
+            document.querySelectorAll('.img-thumbnail').forEach(thumb => {
+                thumb.classList.remove('border-primary');
+            });
+            
+            // Add border to selected thumbnail
+            img.classList.add('border-primary');
+            
+            // Show selected image in carousel
+            var carousel = new bootstrap.Carousel(document.getElementById('productCarousel'));
+            carousel.to(index);
+        }
+    </script>
+} 

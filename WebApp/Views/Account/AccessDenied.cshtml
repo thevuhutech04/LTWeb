@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "Truy cập bị từ chối";
+}
+
+<div class="text-center">
+    <h1 class="text-danger">@ViewData["Title"]</h1>
+    <p class="text-danger">Bạn không có quyền truy cập trang này.</p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Về trang chủ</a>
+</div> 
